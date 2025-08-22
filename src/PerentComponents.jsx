@@ -11,7 +11,6 @@ const ParentComponents = () => {
 
   return (
     <div style={{ width: "100%", height: "100vh" }}>
-      <h2 style={{ textAlign: "center" }}>Drilldown Maps</h2>
       <ChildComponents mapKey={mapKey} setMapKey={handleChangeMap} />
     </div>
   );

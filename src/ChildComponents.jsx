@@ -112,7 +112,9 @@ export default function DrilldownMap() {
             text: ["High", "Low"],
             calculable: true,
             // inRange: { color: ["#e0ffff", "#006edd"] },
-            inRange: { color: ["#e0ffe0", "#008000"] },
+            // inRange: { color: ["#e0ffe0", "#008000"] },
+            // inRange: { color: ["#ccffff", "#00c2c2"] }
+            inRange: { color: ["#b2f0df", "#05a177"] }
           },
           series: [
             {
@@ -126,15 +128,15 @@ export default function DrilldownMap() {
                emphasis: {
       label: { show: true, color: "#fff" }, // text color on hover
       itemStyle: {
-        areaColor: "#228B22", // 👈 hover color (dark green here)
+        areaColor: "#05a177", // 👈 hover color (dark green here)
         borderColor: "#0000",  // border on hover
       },
     },
               data: cfg.data || [],
               itemStyle: {
       areaColor: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-        { offset: 0, color: "#e1e3e1" }, // top color (light green)
-        { offset: 1, color: "#8c8f8c" }, // bottom color (dark green)
+        { offset: 0, color: "#a3a2a2" }, // top color (light green)
+        { offset: 1, color: "#ffffff" }, // bottom color (dark green)
       ]),
       borderColor: "#ffffff",
     },
