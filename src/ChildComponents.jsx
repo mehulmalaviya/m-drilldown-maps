@@ -29,11 +29,12 @@ const MAPS = {
     nameProperty: "ST_NM",
     data: [
       { name: "Gujarat", value: 50 },
-      { name: "Maharashtra", value: 70 },
-      { name: "Delhi", value: 30 },
-      { name: "Karnataka", value: 42 },
-      { name: "Tamil Nadu", value: 55 },
-    ],  
+       { name: "Ladakh", value: 2 },
+      { name: "Maharashtra", value: 7 },
+      { name: "Delhi", value: 10 },
+      { name: "Karnataka", value: 22 },
+      { name: "Tamil Nadu", value: 35 },
+    ],
     onClick: (params) => (params.name === "Gujarat" ? "gujarat" : null),
   },
   gujarat: {
@@ -44,10 +45,10 @@ const MAPS = {
     nameProperty: "district",
     data: [
       { name: "Ahmadabad", value: 20 }, // geojson key is "Ahmadabad"
-      { name: "Surat", value: 15 },
-      { name: "Vadodara", value: 10 },
-      { name: "Rajkot", value: 12 },
-      { name: "Bhavnagar", value: 8 },
+      { name: "Surat", value: 8 },
+      { name: "Vadodara", value: 3 },
+      { name: "Rajkot", value: 7},
+      { name: "Bhavnagar", value: 2 },
       { name: "Jamnagar", value: 6 },
       { name: "Dahod", value: 100 },
     ],
@@ -56,19 +57,18 @@ const MAPS = {
 };
 
 async function fetchJsonWithFallback(urls) {
-  console.log("urls",urls);
-  
+
   let lastErr;
   for (const url of urls) {
     try {
       const r = await fetch(url, { cache: "no-store" });
-      console.log("r",r);
-      
+      console.log("r", r);
+
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       return await r.json();
     } catch (err) {
-      console.log("err",err);
-      
+      console.log("err", err);
+
       lastErr = err;
     }
   }
@@ -79,7 +79,7 @@ export default function DrilldownMap() {
   const elRef = useRef(null);
   const chartRef = useRef(null);
 
-  const [stack, setStack] = useState(["world"]);
+  const [stack, setStack] = useState(["world"]);//india
   const [loading, setLoading] = useState(false);
   const currentKey = stack[stack.length - 1];
 
@@ -98,7 +98,7 @@ export default function DrilldownMap() {
 
       chartRef.current.setOption(
         {
-          backgroundColor: "#0000", 
+          backgroundColor: "#0000",
           title: { text: cfg.title, left: "center" },
           tooltip: {
             trigger: "item",
@@ -112,9 +112,7 @@ export default function DrilldownMap() {
             text: ["High", "Low"],
             calculable: true,
             // inRange: { color: ["#e0ffff", "#006edd"] },
-            // inRange: { color: ["#e0ffe0", "#008000"] },
-            // inRange: { color: ["#ccffff", "#00c2c2"] }
-            inRange: { color: ["#b2f0df", "#05a177"] }
+            inRange: { color: ["#e0ffe0", "#008000"] },
           },
           series: [
             {
@@ -123,25 +121,48 @@ export default function DrilldownMap() {
               map: key,
               roam: true,
               nameProperty: cfg.nameProperty,
-              label: { show: false },
-              // emphasis: { label: { show: true } },
-               emphasis: {
-      label: { show: true, color: "#fff" }, // text color on hover
-      itemStyle: {
-        areaColor: "#05a177", // 👈 hover color (dark green here)
-        borderColor: "#0000",  // border on hover
-      },
-    },
+              label: {
+                show: true,
+                color: "#5b6161",
+                fontSize: 9,
+              },
+              emphasis: {
+                label: { show: true, color: "#ffff" },
+                itemStyle: {
+                  areaColor: "#2ecc71", // green highlight
+                  shadowColor: "#ffff",
+                  shadowBlur: 12,
+                  borderColor: "#333",
+                  borderWidth: 1,
+                },
+              },
               data: cfg.data || [],
               itemStyle: {
-      areaColor: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-        { offset: 0, color: "#a3a2a2" }, // top color (light green)
-        { offset: 1, color: "#ffffff" }, // bottom color (dark green)
-      ]),
-      borderColor: "#ffffff",
-    },
+                borderColor: "#ffff",
+                borderWidth: 1,
+                shadowColor: "#ffff",
+                shadowBlur: 12,
+                shadowOffsetX: 2,
+                shadowOffsetY: 2,
+                areaColor: "#e6e6e6",  // ✅ fallback gray for states with no data
+              },
             },
           ],
+          visualMap: {
+            min,
+            max,
+            left: 10,
+            bottom: 10,
+            text: ["High", "Low"],
+            calculable: true,
+            inRange: {
+              color: ["#b6f0b2", "#2ecc71"], // ✅ gradient green for states with data
+            },
+            outOfRange: {
+              color: ["#e6e6e6"],  // ✅ gray for states without data
+            },
+          },
+
         },
         true
       );
@@ -169,7 +190,7 @@ export default function DrilldownMap() {
 
   useEffect(() => {
     chartRef.current = echarts.init(elRef.current);
-    renderMap("world");
+    renderMap("world"); //India
 
     const onResize = () => chartRef.current && chartRef.current.resize();
     window.addEventListener("resize", onResize);
@@ -206,6 +227,7 @@ export default function DrilldownMap() {
             borderRadius: 8,
             border: "1px solid #ccc",
             background: stack.length <= 1 ? "#eee" : "#f5f5f5",
+            color:'black',
             cursor: stack.length <= 1 ? "not-allowed" : "pointer",
           }}
         >
@@ -234,7 +256,7 @@ export default function DrilldownMap() {
       <div
         ref={elRef}
         style={{
-           background: "#fafafa",
+          background: "#ffff",
           width: 1200,
           height: 600,
           border: "1px solid #ddd",
