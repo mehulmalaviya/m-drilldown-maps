@@ -29,7 +29,7 @@ const MAPS = {
     nameProperty: "ST_NM",
     data: [
       { name: "Gujarat", value: 50 },
-       { name: "Ladakh", value: 2 },
+      { name: "Ladakh", value: 2 },
       { name: "Maharashtra", value: 7 },
       { name: "Delhi", value: 10 },
       { name: "Karnataka", value: 22 },
@@ -47,7 +47,7 @@ const MAPS = {
       { name: "Ahmadabad", value: 20 }, // geojson key is "Ahmadabad"
       { name: "Surat", value: 8 },
       { name: "Vadodara", value: 3 },
-      { name: "Rajkot", value: 7},
+      { name: "Rajkot", value: 7 },
       { name: "Bhavnagar", value: 2 },
       { name: "Jamnagar", value: 6 },
       { name: "Dahod", value: 100 },
@@ -121,10 +121,20 @@ export default function DrilldownMap() {
               map: key,
               roam: true,
               nameProperty: cfg.nameProperty,
+              // label: {
+              //   show: false,
+              //   color: "#5b6161",
+              //   fontSize: 9,
+              // },
               label: {
                 show: true,
-                color: "#5b6161",
+                color: "#303030",
                 fontSize: 9,
+                formatter: (params) => {
+                  // Show label only if this region exists in data
+                  const hasData = (cfg.data || []).some((d) => d.name === params.name);
+                  return hasData ? params.name : "";
+                },
               },
               emphasis: {
                 label: { show: true, color: "#ffff" },
@@ -227,7 +237,7 @@ export default function DrilldownMap() {
             borderRadius: 8,
             border: "1px solid #ccc",
             background: stack.length <= 1 ? "#eee" : "#f5f5f5",
-            color:'black',
+            color: 'black',
             cursor: stack.length <= 1 ? "not-allowed" : "pointer",
           }}
         >
